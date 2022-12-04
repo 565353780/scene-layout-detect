@@ -75,9 +75,16 @@ class LayoutDataset(Dataset):
 
         dataset_folder_path = scan2cad_dataset_folder_path + "object_position_dataset/"
 
-        print("[INFO][ObjectPositionDataset::loadScan2CAD]")
-        print("\t start load scan2cad dataset...")
+        print("[INFO][LayoutDataset::loadScanNetLayout]")
+        print("\t start load scannet layout dataset...")
         for scene_name in tqdm(scene_name_list):
+            view_name_list = dataset_loader.getViewNameList(scene_name)
+
+            for view_name in view_name_list:
+                depth_image, layout_depth_image = dataset_loader.getUniformDepthImages(
+                    scene_name, view_name)
+            # TODO: finish this func
+
             scene_folder_path = dataset_folder_path + scene_name + "/"
             bbox_array_file_path = scene_folder_path + "bbox_array.npy"
             center_array_file_path = scene_folder_path + "center_array.npy"
