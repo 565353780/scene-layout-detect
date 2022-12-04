@@ -12,7 +12,7 @@ def getProjectPoints(point_array, dim=2):
     project_points = deepcopy(points)
 
     if dim == 2:
-        project_points = project_points[:, 2]
+        project_points = project_points[:, :2]
         return project_points
 
     project_points[:, 2] = 0
