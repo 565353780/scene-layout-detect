@@ -4,12 +4,10 @@
 import cv2
 import numpy as np
 import open3d as o3d
-from copy import deepcopy
 
 from scene_layout_detect.Data.layout_map import LayoutMap
 
-from scene_layout_detect.Method.project import getProjectPoints
-from scene_layout_detect.Method.angle import getPointsAngle
+from scene_layout_detect.Method.polygon import getPolygon
 from scene_layout_detect.Method.render import renderProjectPoints
 
 
@@ -25,8 +23,8 @@ class LayoutMapBuilder(object):
 
     def addPoints(self, camera_point, point_array):
         #  renderProjectPoints(camera_point, point_array)
-
-        points = getProjectPoints(point_array)
-        copy_camera_point = deepcopy(camera_point).reshape(3)[:2]
-        angle_array = getPointsAngle(copy_camera_point, points)
+        delta_angle = 2
+        polygon = getPolygon(camera_point, point_array, delta_angle)
+        print(polygon)
+        exit()
         return True
