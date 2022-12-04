@@ -11,3 +11,6 @@ class LayoutNet(nn.Module):
         self.encoder = ResNetEncoder()
         self.decoder = DepthDecoder()
         return
+
+    def forward(self, data):
+        return data
