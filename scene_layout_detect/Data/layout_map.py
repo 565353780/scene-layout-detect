@@ -7,6 +7,8 @@ from math import ceil
 import cv2
 import numpy as np
 
+from scene_layout_detect.Method.render import renderPolygonAndFloor
+
 
 class LayoutMap(object):
 
@@ -25,26 +27,11 @@ class LayoutMap(object):
         self.map = None
         return True
 
-    def getPixelFromPoint(self, point):
-        scale_point = point / self.unit_size
-        diff = scale_point - self.map_start_point
-        pixel = np.array(int(diff[0]), int(diff[1]), dtype=int)
-        return pixel
-
-    def getPointFromPixel(self, x, y):
-        translate_x = x + self.map_start_point[0]
-        translate_y = y + self.map_start_point[1]
-        point = np.array(translate_x * self.unit_size,
-                         translate_y * self.unit_size,
-                         0,
-                         dtype=float)
-        return point
-
     def addPolygon(self, polygon):
         self.polygon_list.append(polygon)
         return True
 
-    def generateMap(self, unit_size=0.01, free_width=50):
+    def updateMap(self, unit_size=0.01, free_width=50, fill=False):
         self.unit_size = unit_size
         self.free_width = free_width
         scale = 1.0 / unit_size
@@ -97,9 +84,46 @@ class LayoutMap(object):
         for polygon in copy_polygon_list:
             pts = polygon[:, :2].astype(int)
             pts = pts[..., ::-1]
-            #  cv2.fillPoly(self.map, [pts], 255)
-            cv2.polylines(self.map, [pts], True, 255)
-
-        cv2.imshow("map_" + str(len(self.polygon_list)), self.map)
-        cv2.waitKey(1)
+            if fill:
+                cv2.fillPoly(self.map, [pts], 255)
+            else:
+                cv2.polylines(self.map, [pts], True, 255)
         return True
+
+    def getPixelFromPoint(self, point):
+        scale_point = point / self.unit_size
+        diff = scale_point - self.map_start_point
+        pixel = np.array(int(diff[0]), int(diff[1]), dtype=int)
+        return pixel
+
+    def getPointFromPixel(self, x, y):
+        translate_x = x + self.map_start_point[0]
+        translate_y = y + self.map_start_point[1]
+        point = np.array(
+            [translate_x * self.unit_size, translate_y * self.unit_size, 0],
+            dtype=float)
+        return point
+
+    def generateLayoutMesh(self, unit_size=0.01, free_width=50, render=False):
+        self.updateMap(unit_size, free_width)
+
+        bound_mask = np.dstack(np.where(self.map == 255))[0]
+
+        rect = cv2.minAreaRect(bound_mask)
+        box = cv2.boxPoints(rect)
+
+        if render:
+            draw_box = box[..., ::-1].astype(int)
+            cv2.polylines(self.map, [draw_box], True, 128, 1)
+            cv2.imshow("map_" + str(len(self.polygon_list)), self.map)
+
+        floor_point_list = []
+        for pixel in box:
+            point = self.getPointFromPixel(pixel[0], pixel[1])
+            floor_point_list.append([point[0], point[1], 0.0])
+
+        floor_array = np.array(floor_point_list)
+
+        #  if render:
+        renderPolygonAndFloor(self.polygon_list, floor_array)
+        return

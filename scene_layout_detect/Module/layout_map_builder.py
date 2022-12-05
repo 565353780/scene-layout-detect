@@ -13,23 +13,28 @@ from scene_layout_detect.Method.render import renderPolygon
 
 class LayoutMapBuilder(object):
 
-    def __init__(self):
-        self.layout_map = LayoutMap()
+    def __init__(self, delta_angle=2, unit_size=0.01, free_width=50):
+        self.delta_angle = delta_angle
+        self.unit_size = unit_size
+        self.free_width = free_width
+
+        self.layout_map = LayoutMap(self.unit_size, self.free_width)
+        self.layout_mesh = None
         return
 
     def reset(self):
         self.layout_map.reset()
+        self.layout_mesh = None
         return True
 
     def addPoints(self, camera_point, point_array):
-        delta_angle = 2
+        #  renderPolygon(camera_point, point_array, self.delta_angle)
 
-        renderPolygon(camera_point, point_array, delta_angle)
-
-        polygon = getPolygon(camera_point, point_array, delta_angle)
+        polygon = getPolygon(camera_point, point_array, self.delta_angle)
         self.layout_map.addPolygon(polygon)
         return True
 
-    def generateMap(self):
-        assert self.layout_map.generateMap()
+    def updateLayoutMesh(self):
+        self.layout_mesh = self.layout_map.generateLayoutMesh(
+            self.unit_size, self.free_width)
         return True

@@ -1,19 +1,23 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import numpy as np
-import open3d as o3d
 from copy import deepcopy
 
+import numpy as np
+import open3d as o3d
 from scannet_sim_manage.Method.render import render
 
-from scene_layout_detect.Method.project import getProjectPoints
 from scene_layout_detect.Method.polygon import getPolygon
+from scene_layout_detect.Method.project import getProjectPoints
 
 
-def getPointsPCD(point_array):
+def getPointsPCD(point_array, color=None):
     pcd = o3d.geometry.PointCloud()
     pcd.points = o3d.utility.Vector3dVector(point_array)
+    if color is not None:
+        colors = np.zeros_like(point_array)
+        colors[:] = color
+        pcd.colors = o3d.utility.Vector3dVector(colors)
     return pcd
 
 
@@ -59,11 +63,24 @@ def renderPolygon(camera_point, point_array, delta_angle):
     return True
 
 
-def renderPolygonList(polygon_list, delta_angle):
+def renderPolygonList(polygon_list):
     pcd_list = []
     for polygon in polygon_list:
         pcd = getPointsPCD(polygon)
         pcd_list.append(pcd)
+
+    render(pcd_list)
+    return True
+
+
+def renderPolygonAndFloor(polygon_list, floor_array):
+    pcd_list = []
+    for polygon in polygon_list:
+        pcd = getPointsPCD(polygon)
+        pcd_list.append(pcd)
+
+    floor_pcd = getPointsPCD(floor_array, [1, 0, 0])
+    pcd_list.append(floor_pcd)
 
     render(pcd_list)
     return True
