@@ -8,7 +8,8 @@ import open3d as o3d
 from scene_layout_detect.Data.layout_map import LayoutMap
 
 from scene_layout_detect.Method.polygon import getPolygon
-from scene_layout_detect.Method.render import renderProjectPoints
+from scene_layout_detect.Method.render import \
+    renderProjectPoints, renderPolygon
 
 
 class LayoutMapBuilder(object):
@@ -22,9 +23,15 @@ class LayoutMapBuilder(object):
         return True
 
     def addPoints(self, camera_point, point_array):
-        #  renderProjectPoints(camera_point, point_array)
         delta_angle = 2
+
+        #  renderProjectPoints(camera_point, point_array)
+        #  renderPolygon(camera_point, point_array, delta_angle)
+
         polygon = getPolygon(camera_point, point_array, delta_angle)
-        print(polygon)
-        exit()
+        self.layout_map.addPolygon(polygon)
+        return True
+
+    def generateMap(self):
+        assert self.layout_map.generateMap()
         return True
