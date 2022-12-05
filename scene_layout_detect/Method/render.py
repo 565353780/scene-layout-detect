@@ -11,6 +11,12 @@ from scene_layout_detect.Method.project import getProjectPoints
 from scene_layout_detect.Method.polygon import getPolygon
 
 
+def getPointsPCD(point_array):
+    pcd = o3d.geometry.PointCloud()
+    pcd.points = o3d.utility.Vector3dVector(point_array)
+    return pcd
+
+
 def getProjectPCD(camera_point, point_array):
     copy_camera_point = deepcopy(camera_point).reshape(1, 3)
     copy_camera_point[0][2] = 0.0
@@ -50,4 +56,14 @@ def renderPolygon(camera_point, point_array, delta_angle):
     polygon_pcd = getPolygonPCD(camera_point, point_array, delta_angle)
 
     render([pcd, polygon_pcd])
+    return True
+
+
+def renderPolygonList(polygon_list, delta_angle):
+    pcd_list = []
+    for polygon in polygon_list:
+        pcd = getPointsPCD(polygon)
+        pcd_list.append(pcd)
+
+    render(pcd_list)
     return True

@@ -10,8 +10,9 @@ import numpy as np
 
 class LayoutMap(object):
 
-    def __init__(self, unit_size=0.01):
+    def __init__(self, unit_size=0.01, free_width=50):
         self.unit_size = unit_size
+        self.free_width = free_width
 
         self.polygon_list = []
         self.map_start_point = None
@@ -24,12 +25,28 @@ class LayoutMap(object):
         self.map = None
         return True
 
+    def getPixelFromPoint(self, point):
+        scale_point = point / self.unit_size
+        diff = scale_point - self.map_start_point
+        pixel = np.array(int(diff[0]), int(diff[1]), dtype=int)
+        return pixel
+
+    def getPointFromPixel(self, x, y):
+        translate_x = x + self.map_start_point[0]
+        translate_y = y + self.map_start_point[1]
+        point = np.array(translate_x * self.unit_size,
+                         translate_y * self.unit_size,
+                         0,
+                         dtype=float)
+        return point
+
     def addPolygon(self, polygon):
         self.polygon_list.append(polygon)
         return True
 
-    def generateMap(self, unit_size=0.01):
+    def generateMap(self, unit_size=0.01, free_width=50):
         self.unit_size = unit_size
+        self.free_width = free_width
         scale = 1.0 / unit_size
 
         self.map_start_point = None
@@ -53,8 +70,11 @@ class LayoutMap(object):
             map_x_min = min(map_x_min, x_min)
             map_y_min = min(map_y_min, y_min)
 
-        self.map_start_point = np.array(
-            [int(map_x_min), int(map_y_min), 0], dtype=int)
+        self.map_start_point = np.array([
+            int(map_x_min) - self.free_width,
+            int(map_y_min) - self.free_width, 0
+        ],
+                                        dtype=int)
 
         for i in range(len(copy_polygon_list)):
             copy_polygon_list[i] = copy_polygon_list[i] - self.map_start_point
@@ -69,10 +89,16 @@ class LayoutMap(object):
             map_x_max = max(map_x_max, x_max)
             map_y_max = max(map_y_max, y_max)
 
-        map_width = ceil(map_x_max)
-        map_height = ceil(map_y_max)
+        map_width = ceil(map_x_max) + self.free_width
+        map_height = ceil(map_y_max) + self.free_width
 
         self.map = np.zeros((map_width, map_height), dtype=np.uint8)
-        print("self.map.shape")
-        print(self.map.shape)
+
+        for polygon in copy_polygon_list:
+            pts = [polygon[:, :2].astype(int)]
+            #  cv2.fillPoly(self.map, pts, 255)
+            cv2.polylines(self.map, pts, True, 255)
+
+        cv2.imshow("map", self.map)
+        cv2.waitKey(1)
         return True
