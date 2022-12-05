@@ -20,11 +20,16 @@ def getPolygon(camera_point, point_array, delta_angle):
 
     point_list.append(copy_camera_point)
 
+    mean_point = np.mean(points, axis=0)
+    start_angle_vector = copy_camera_point - mean_point
+    start_angle = np.arctan2(start_angle_vector[1],
+                             start_angle_vector[0]) * 180.0 / np.pi
+
     angle_num = int(360.0 / delta_angle)
     delta_angle = 360.0 / angle_num
     for i in range(angle_num):
-        angle_min = i * delta_angle
-        angle_max = (i + 1) * delta_angle
+        angle_min = i * delta_angle + start_angle
+        angle_max = (i + 1) * delta_angle + start_angle
         in_range_point_idx = getInRangeAngleIdx(angle_array, angle_min,
                                                 angle_max)
         if in_range_point_idx.shape[0] == 0:

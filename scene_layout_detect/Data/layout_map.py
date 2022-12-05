@@ -95,10 +95,11 @@ class LayoutMap(object):
         self.map = np.zeros((map_width, map_height), dtype=np.uint8)
 
         for polygon in copy_polygon_list:
-            pts = [polygon[:, :2].astype(int)]
-            #  cv2.fillPoly(self.map, pts, 255)
-            cv2.polylines(self.map, pts, True, 255)
+            pts = polygon[:, :2].astype(int)
+            pts = pts[..., ::-1]
+            #  cv2.fillPoly(self.map, [pts], 255)
+            cv2.polylines(self.map, [pts], True, 255)
 
-        cv2.imshow("map", self.map)
+        cv2.imshow("map_" + str(len(self.polygon_list)), self.map)
         cv2.waitKey(1)
         return True
