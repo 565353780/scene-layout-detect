@@ -6,7 +6,11 @@ from math import ceil
 
 import cv2
 import numpy as np
+import open3d as o3d
 
+from scannet_sim_manage.Method.render import render as renderMesh
+
+from scene_layout_detect.Method.mesh import generateLayoutMesh
 from scene_layout_detect.Method.render import renderPolygonAndFloor
 
 
@@ -124,6 +128,11 @@ class LayoutMap(object):
 
         floor_array = np.array(floor_point_list)
 
-        #  if render:
-        renderPolygonAndFloor(self.polygon_list, floor_array)
-        return
+        if render:
+            renderPolygonAndFloor(self.polygon_list, floor_array)
+
+        layout_mesh = generateLayoutMesh(floor_array)
+
+        if render:
+            renderMesh([layout_mesh])
+        return layout_mesh

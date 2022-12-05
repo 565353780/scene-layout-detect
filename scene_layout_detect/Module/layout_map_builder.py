@@ -27,14 +27,15 @@ class LayoutMapBuilder(object):
         self.layout_mesh = None
         return True
 
-    def addPoints(self, camera_point, point_array):
-        #  renderPolygon(camera_point, point_array, self.delta_angle)
+    def addPoints(self, camera_point, point_array, render=False):
+        if render:
+            renderPolygon(camera_point, point_array, self.delta_angle)
 
         polygon = getPolygon(camera_point, point_array, self.delta_angle)
         self.layout_map.addPolygon(polygon)
         return True
 
-    def updateLayoutMesh(self):
+    def updateLayoutMesh(self, render=False):
         self.layout_mesh = self.layout_map.generateLayoutMesh(
-            self.unit_size, self.free_width)
+            self.unit_size, self.free_width, render)
         return True
