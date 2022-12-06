@@ -1,14 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import numpy as np
-import open3d as o3d
 from copy import deepcopy
 
+import numpy as np
+import open3d as o3d
 
-def generateLayoutMesh(floor_array):
+
+def generateLayoutMesh(floor_array, height=3):
     top_floor_array = deepcopy(floor_array)
-    top_floor_array[:, 2] += 5
+    top_floor_array[:, 2] += height
 
     verts = np.vstack((floor_array, top_floor_array))
 

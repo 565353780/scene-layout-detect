@@ -56,6 +56,10 @@ def renderProjectPoints(camera_point, point_array):
 
 
 def renderPolygon(camera_point, point_array, delta_angle):
+    points = point_array[np.where(point_array[:, 0] != float("inf"))[0]]
+    pcd = getPointsPCD(points)
+    render([pcd])
+
     pcd = getProjectPCD(camera_point, point_array)
     polygon_pcd = getPolygonPCD(camera_point, point_array, delta_angle)
 
