@@ -4,6 +4,7 @@
 import cv2
 import numpy as np
 import open3d as o3d
+from copy import deepcopy
 
 from scene_layout_detect.Data.layout_map import LayoutMap
 
@@ -32,6 +33,12 @@ class LayoutMapBuilder(object):
             renderPolygon(camera_point, point_array, self.delta_angle)
 
         polygon = getPolygon(camera_point, point_array, self.delta_angle)
+        self.layout_map.addPolygon(polygon)
+        return True
+
+    def addBound(self, bound_point_array, render=False):
+        polygon = deepcopy(bound_point_array)
+        polygon[:, 2] = 0
         self.layout_map.addPolygon(polygon)
         return True
 
