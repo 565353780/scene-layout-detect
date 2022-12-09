@@ -27,12 +27,14 @@ class LayoutMapBuilder(object):
         self.layout_mesh = None
 
         self.explore_point_extractor = ExplorePointExtractor()
+        self.explore_point_idx_array = None
         return
 
     def reset(self):
         self.layout_map.reset()
         self.explore_map.reset()
         self.layout_mesh = None
+        self.explore_point_idx_array = None
         return True
 
     def addPoints(self,
@@ -55,9 +57,12 @@ class LayoutMapBuilder(object):
         self.layout_map.addPolygon(polygon)
         return True
 
-    def updateLayoutMesh(self, min_explore_point_dist=5, render=False):
+    def updateLayoutMesh(self, wall_height=3, render=False):
         self.layout_mesh = self.layout_map.generateLayoutMesh(
-            self.unit_size, self.free_width, render)
-        self.explore_point_extractor.extractExplorePoints(
+            self.unit_size, self.free_width, wall_height, render)
+        return True
+
+    def updateExplorePointIdx(self, min_explore_point_dist=5, render=False):
+        self.explore_point_idx_array = self.explore_point_extractor.extractExplorePoints(
             self.explore_map.map, min_explore_point_dist, render)
         return True
