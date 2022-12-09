@@ -12,12 +12,7 @@ from scene_layout_detect.Method.sample import fps
 class ExplorePointExtractor(object):
 
     def __init__(self):
-        self.explore_point_idx_array = None
         return
-
-    def reset(self):
-        self.explore_point_idx_array = None
-        return True
 
     def extractExploreBoundPoints(self,
                                   explore_map,
@@ -29,8 +24,6 @@ class ExplorePointExtractor(object):
         explore_map[unknown_idx] = UNKNOWN_COLOR
         free_idx = np.where(explore_map > 128 + 54)
         explore_map[free_idx] = FREE_COLOR
-
-        render = True
 
         unknown_mask = explore_map == UNKNOWN_COLOR
         free_mask = explore_map == FREE_COLOR
@@ -77,7 +70,7 @@ class ExplorePointExtractor(object):
             for i, bound_point_set_idx in enumerate(bound_point_set_idx_list):
                 visual_map[bound_point_set_idx] = COLORS[i]
             cv2.imshow("connect_area", visual_map)
-            cv2.waitKey(0)
+            cv2.waitKey(1)
 
         sample_explore_point_idx_array = []
 
@@ -97,19 +90,22 @@ class ExplorePointExtractor(object):
         sample_explore_point_idx_array = np.vstack(
             sample_explore_point_idx_array)
 
-        if render:
-            visual_map = np.zeros_like(explore_map, dtype=np.uint8)
-            for idx in sample_explore_point_idx_array:
-                visual_map[idx[0], idx[1]] = 255
-            cv2.imshow("sample_explore_point", visual_map)
-            cv2.waitKey(0)
-        return True
+        return sample_explore_point_idx_array
 
     def extractExplorePoints(self,
                              explore_map,
                              min_point_dist=5,
                              render=False):
-        self.reset()
+        render = True
 
-        self.extractExploreBoundPoints(explore_map, min_point_dist, render)
-        return True
+        explore_points = self.extractExploreBoundPoints(
+            explore_map, min_point_dist, render)
+
+        if render:
+            visual_map = np.zeros_like(explore_map, dtype=np.uint8)
+            for idx in explore_points:
+                visual_map[idx[0], idx[1]] = 255
+            cv2.imshow("sample_explore_point", visual_map)
+            cv2.waitKey(1)
+
+        return explore_points
