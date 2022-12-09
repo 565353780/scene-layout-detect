@@ -22,12 +22,14 @@ class LayoutMap(object):
 
         self.polygon_list = []
         self.map_start_point = None
+        self.floor_array = []
         self.map = None
         return
 
     def reset(self):
         self.polygon_list = []
         self.map_start_point = None
+        self.floor_array = []
         self.map = None
         return True
 
@@ -108,7 +110,7 @@ class LayoutMap(object):
             dtype=float)
         return point
 
-    def generateLayoutMesh(self, unit_size=0.01, free_width=50, render=False):
+    def generateLayoutFloor(self, unit_size=0.01, free_width=50, render=False):
         self.updateMap(unit_size, free_width)
 
         bound_mask = np.dstack(np.where(self.map == 255))[0]
@@ -126,12 +128,20 @@ class LayoutMap(object):
             point = self.getPointFromPixel(pixel[0], pixel[1])
             floor_point_list.append([point[0], point[1], 0.0])
 
-        floor_array = np.array(floor_point_list)
+        self.floor_array = np.array(floor_point_list)
 
         if render:
-            renderPolygonAndFloor(self.polygon_list, floor_array)
+            renderPolygonAndFloor(self.polygon_list, self.floor_array)
+        return True
 
-        layout_mesh = generateLayoutMesh(floor_array)
+    def generateLayoutMesh(self,
+                           unit_size=0.01,
+                           free_width=50,
+                           wall_height=3,
+                           render=False):
+        self.generateLayoutFloor(unit_size, free_width, render)
+
+        layout_mesh = generateLayoutMesh(self.floor_array, wall_height)
 
         if render:
             renderMesh([layout_mesh])
