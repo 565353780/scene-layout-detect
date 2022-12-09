@@ -12,6 +12,8 @@ from scene_layout_detect.Data.explore_map import ExploreMap
 from scene_layout_detect.Method.polygon import getPolygon
 from scene_layout_detect.Method.render import renderPolygon
 
+from scene_layout_detect.Module.explore_point_extractor import ExplorePointExtractor
+
 
 class LayoutMapBuilder(object):
 
@@ -23,6 +25,8 @@ class LayoutMapBuilder(object):
         self.layout_map = LayoutMap(self.unit_size, self.free_width)
         self.explore_map = ExploreMap(self.unit_size, self.free_width)
         self.layout_mesh = None
+
+        self.explore_point_extractor = ExplorePointExtractor()
         return
 
     def reset(self):
@@ -31,12 +35,17 @@ class LayoutMapBuilder(object):
         self.layout_mesh = None
         return True
 
-    def addPoints(self, camera_point, point_array, render=False):
+    def addPoints(self,
+                  camera_point,
+                  point_array,
+                  explore_paint_radius=0.1,
+                  render=False):
         if render:
             renderPolygon(camera_point, point_array, self.delta_angle)
 
-        self.explore_map.addPoints(point_array)
         polygon = getPolygon(camera_point, point_array, self.delta_angle)
+        self.explore_map.updateFree(polygon)
+        self.explore_map.addPoints(point_array, explore_paint_radius, render)
         self.layout_map.addPolygon(polygon)
         return True
 
@@ -49,4 +58,6 @@ class LayoutMapBuilder(object):
     def updateLayoutMesh(self, render=False):
         self.layout_mesh = self.layout_map.generateLayoutMesh(
             self.unit_size, self.free_width, render)
+        self.explore_point_extractor.extractExplorePoints(
+            self.explore_map.map, render)
         return True
