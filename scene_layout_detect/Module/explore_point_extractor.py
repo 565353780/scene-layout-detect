@@ -6,20 +6,23 @@ import numpy as np
 
 from scene_layout_detect.Config.color import UNKNOWN_COLOR, FREE_COLOR, OBSTACLE_COLOR
 
+from scene_layout_detect.Method.sample import fps
+
 
 class ExplorePointExtractor(object):
 
     def __init__(self):
-        self.explore_bound_point_list = []
-        self.explore_points = None
+        self.explore_point_idx_array = None
         return
 
     def reset(self):
-        self.explore_bound_point_list = []
-        self.explore_points = None
+        self.explore_point_idx_array = None
         return True
 
-    def extractExploreBoundPoints(self, explore_map, render=False):
+    def extractExploreBoundPoints(self,
+                                  explore_map,
+                                  min_point_dist=5,
+                                  render=False):
         obstacle_idx = np.where(explore_map < 54)
         explore_map[obstacle_idx] = OBSTACLE_COLOR
         unknown_idx = np.where((explore_map < 128 + 54) & (explore_map > 54))
@@ -48,10 +51,11 @@ class ExplorePointExtractor(object):
 
         if render:
             cv2.imshow("explore_map", explore_map)
-            cv2.imshow("free_area", new_map)
+            cv2.imshow("explore_area", new_map)
             cv2.waitKey(1)
 
-        label_num, label_map, _, _ = cv2.connectedComponentsWithStats(new_map)
+        label_num, label_map, info, _ = cv2.connectedComponentsWithStats(
+            new_map)
 
         bound_point_set_idx_list = []
 
@@ -75,11 +79,37 @@ class ExplorePointExtractor(object):
             cv2.imshow("connect_area", visual_map)
             cv2.waitKey(0)
 
-        free_expand_mask = free_mask
+        sample_explore_point_idx_array = []
+
+        for i in range(1, label_num):
+            _, _, width, height, _ = info[i]
+            bound_length = np.linalg.norm([width, height])
+            sample_point_num = int(np.sqrt(bound_length) / min_point_dist)
+            sample_point_num = max(1, sample_point_num)
+
+            idx_array = np.dstack(bound_point_set_idx_list[i - 1])[0]
+            point_array = np.zeros((idx_array.shape[0], 3), dtype=float)
+            point_array[:, :2] = idx_array
+            fps_points = fps(point_array, sample_point_num)
+            fps_idx_array = fps_points[:, :2].astype(int)
+            sample_explore_point_idx_array.append(fps_idx_array)
+
+        sample_explore_point_idx_array = np.vstack(
+            sample_explore_point_idx_array)
+
+        if render:
+            visual_map = np.zeros_like(explore_map, dtype=np.uint8)
+            for idx in sample_explore_point_idx_array:
+                visual_map[idx[0], idx[1]] = 255
+            cv2.imshow("sample_explore_point", visual_map)
+            cv2.waitKey(0)
         return True
 
-    def extractExplorePoints(self, explore_map, render=False):
+    def extractExplorePoints(self,
+                             explore_map,
+                             min_point_dist=5,
+                             render=False):
         self.reset()
 
-        self.extractExploreBoundPoints(explore_map, render)
+        self.extractExploreBoundPoints(explore_map, min_point_dist, render)
         return True

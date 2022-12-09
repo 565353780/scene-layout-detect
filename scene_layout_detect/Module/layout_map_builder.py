@@ -55,9 +55,9 @@ class LayoutMapBuilder(object):
         self.layout_map.addPolygon(polygon)
         return True
 
-    def updateLayoutMesh(self, render=False):
+    def updateLayoutMesh(self, min_explore_point_dist=5, render=False):
         self.layout_mesh = self.layout_map.generateLayoutMesh(
             self.unit_size, self.free_width, render)
         self.explore_point_extractor.extractExplorePoints(
-            self.explore_map.map, render)
+            self.explore_map.map, min_explore_point_dist, render)
         return True
