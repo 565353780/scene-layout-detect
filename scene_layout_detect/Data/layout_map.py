@@ -6,7 +6,6 @@ from math import ceil
 
 import cv2
 import numpy as np
-import open3d as o3d
 
 from scannet_sim_manage.Method.render import render as renderMesh
 
@@ -99,7 +98,7 @@ class LayoutMap(object):
     def getPixelFromPoint(self, point):
         scale_point = point / self.unit_size
         diff = scale_point - self.map_start_point
-        pixel = np.array(int(diff[0]), int(diff[1]), dtype=int)
+        pixel = np.array([int(diff[0]), int(diff[1])], dtype=int)
         return pixel
 
     def getPointFromPixel(self, x, y):
