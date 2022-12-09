@@ -49,6 +49,30 @@ class ExplorePointExtractor(object):
         if render:
             cv2.imshow("explore_map", explore_map)
             cv2.imshow("free_area", new_map)
+            cv2.waitKey(1)
+
+        label_num, label_map, _, _ = cv2.connectedComponentsWithStats(new_map)
+
+        bound_point_set_idx_list = []
+
+        for i in range(1, label_num):
+            cluster_idx = np.where(label_map == i)
+            bound_point_set_idx_list.append(cluster_idx)
+
+        if render:
+            COLORS = np.array(
+                [[0, 0, 255], [0, 255, 0], [255, 0, 0], [255, 255, 0],
+                 [255, 0, 255], [0, 255, 255], [125, 0, 255], [0, 255, 125],
+                 [255, 0, 125], [255, 255, 125], [255, 125, 255],
+                 [0, 125, 255]],
+                dtype=np.uint8)
+
+            visual_map = np.zeros(
+                (explore_map.shape[0], explore_map.shape[1], 3),
+                dtype=np.uint8)
+            for i, bound_point_set_idx in enumerate(bound_point_set_idx_list):
+                visual_map[bound_point_set_idx] = COLORS[i]
+            cv2.imshow("connect_area", visual_map)
             cv2.waitKey(0)
 
         free_expand_mask = free_mask
