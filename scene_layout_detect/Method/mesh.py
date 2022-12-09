@@ -7,9 +7,9 @@ import numpy as np
 import open3d as o3d
 
 
-def generateLayoutMesh(floor_array, height=3):
+def generateLayoutMesh(floor_array, wall_height=3):
     top_floor_array = deepcopy(floor_array)
-    top_floor_array[:, 2] += height
+    top_floor_array[:, 2] += wall_height
 
     verts = np.vstack((floor_array, top_floor_array))
 
