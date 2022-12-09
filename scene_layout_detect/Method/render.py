@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 from copy import deepcopy
+from multiprocessing import Process
 
 import numpy as np
 import open3d as o3d
@@ -87,4 +88,13 @@ def renderPolygonAndFloor(polygon_list, floor_array):
     pcd_list.append(floor_pcd)
 
     render(pcd_list)
+    return True
+
+
+def drawMeshList(mesh_list, window_name="Open3D"):
+    process = Process(target=o3d.visualization.draw_geometries,
+                      args=(mesh_list, window_name))
+    process.start()
+    #  process.join()
+    #  process.close()
     return True
