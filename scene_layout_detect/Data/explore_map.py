@@ -70,9 +70,13 @@ class ExploreMap(object):
         new_map_start_point = np.min([self.map_start_point, int_min_point],
                                      axis=0)
 
-        map_width, map_height, _ = self.map.shape
-        new_map_width = np.max(map_width, map_shape[0])
-        new_map_height = np.max(map_height, map_shape[1])
+        exist_map_start_pixel = self.map_start_point - new_map_start_point
+
+        map_width, map_height = self.map.shape
+        new_map_width = max(map_width + exist_map_start_pixel[0],
+                            ceil_max_point[0] - new_map_start_point[0] + 1)
+        new_map_height = max(map_height + exist_map_start_pixel[1],
+                             ceil_max_point[1] - new_map_start_point[1] + 1)
 
         if (new_map_start_point == self.map_start_point).all() and \
                 new_map_width == map_width and \
@@ -82,7 +86,6 @@ class ExploreMap(object):
         new_map = np.ones(
             (new_map_width, new_map_height), dtype=np.uint8) * UNKNOWN_COLOR
 
-        exist_map_start_pixel = self.map_start_point - new_map_start_point
         new_map[exist_map_start_pixel[0]:exist_map_start_pixel[0] + map_width,
                 exist_map_start_pixel[1]:exist_map_start_pixel[1] +
                 map_height] = self.map
