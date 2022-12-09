@@ -7,6 +7,7 @@ import open3d as o3d
 from copy import deepcopy
 
 from scene_layout_detect.Data.layout_map import LayoutMap
+from scene_layout_detect.Data.explore_map import ExploreMap
 
 from scene_layout_detect.Method.polygon import getPolygon
 from scene_layout_detect.Method.render import renderPolygon
@@ -20,11 +21,13 @@ class LayoutMapBuilder(object):
         self.free_width = free_width
 
         self.layout_map = LayoutMap(self.unit_size, self.free_width)
+        self.explore_map = ExploreMap(self.unit_size, self.free_width)
         self.layout_mesh = None
         return
 
     def reset(self):
         self.layout_map.reset()
+        self.explore_map.reset()
         self.layout_mesh = None
         return True
 
@@ -32,6 +35,7 @@ class LayoutMapBuilder(object):
         if render:
             renderPolygon(camera_point, point_array, self.delta_angle)
 
+        self.explore_map.addPoints(point_array)
         polygon = getPolygon(camera_point, point_array, self.delta_angle)
         self.layout_map.addPolygon(polygon)
         return True
