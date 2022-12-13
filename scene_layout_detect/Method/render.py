@@ -6,7 +6,7 @@ from multiprocessing import Process
 
 import numpy as np
 import open3d as o3d
-from scannet_sim_manage.Method.render import render
+from scannet_sim_manage.Method.render import drawGeometries
 
 from scene_layout_detect.Method.polygon import getPolygon
 from scene_layout_detect.Method.project import getProjectPoints
@@ -52,19 +52,19 @@ def getPolygonPCD(camera_point, point_array, delta_angle):
 
 def renderProjectPoints(camera_point, point_array):
     pcd = getProjectPCD(camera_point, point_array)
-    render([pcd])
+    drawGeometries([pcd])
     return True
 
 
 def renderPolygon(camera_point, point_array, delta_angle):
     points = point_array[np.where(point_array[:, 0] != float("inf"))[0]]
     pcd = getPointsPCD(points)
-    render([pcd])
+    drawGeometries([pcd])
 
     pcd = getProjectPCD(camera_point, point_array)
     polygon_pcd = getPolygonPCD(camera_point, point_array, delta_angle)
 
-    render([pcd, polygon_pcd])
+    drawGeometries([pcd, polygon_pcd])
     return True
 
 
@@ -74,7 +74,7 @@ def renderPolygonList(polygon_list):
         pcd = getPointsPCD(polygon)
         pcd_list.append(pcd)
 
-    render(pcd_list)
+    drawGeometries(pcd_list)
     return True
 
 
@@ -87,7 +87,7 @@ def renderPolygonAndFloor(polygon_list, floor_array):
     floor_pcd = getPointsPCD(floor_array, [1, 0, 0])
     pcd_list.append(floor_pcd)
 
-    render(pcd_list)
+    drawGeometries(pcd_list)
     return True
 
 

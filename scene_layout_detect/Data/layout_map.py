@@ -7,7 +7,7 @@ from math import ceil
 import cv2
 import numpy as np
 
-from scannet_sim_manage.Method.render import render as renderMesh
+from scannet_sim_manage.Method.render import drawGeometries
 
 from scene_layout_detect.Method.mesh import generateLayoutMesh
 from scene_layout_detect.Method.render import renderPolygonAndFloor
@@ -143,5 +143,5 @@ class LayoutMap(object):
         layout_mesh = generateLayoutMesh(self.floor_array, wall_height)
 
         if render:
-            renderMesh([layout_mesh])
+            drawGeometries([layout_mesh])
         return layout_mesh
