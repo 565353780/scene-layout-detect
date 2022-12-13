@@ -78,7 +78,10 @@ class ExplorePointExtractor(object):
             _, _, width, height, _ = info[i]
             bound_length = np.linalg.norm([width, height])
             sample_point_num = int(np.sqrt(bound_length) / min_point_dist)
-            sample_point_num = max(1, sample_point_num)
+
+            #  sample_point_num = max(1, sample_point_num)
+            if sample_point_num == 0:
+                continue
 
             idx_array = np.dstack(bound_point_set_idx_list[i - 1])[0]
             point_array = np.zeros((idx_array.shape[0], 3), dtype=float)
@@ -96,8 +99,6 @@ class ExplorePointExtractor(object):
                              explore_map,
                              min_point_dist=5,
                              render=False):
-        render = True
-
         explore_points = self.extractExploreBoundPoints(
             explore_map, min_point_dist, render)
 
