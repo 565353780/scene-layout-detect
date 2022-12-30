@@ -90,8 +90,9 @@ class ExplorePointExtractor(object):
             fps_idx_array = fps_points[:, :2].astype(int)
             sample_explore_point_idx_array.append(fps_idx_array)
 
-        sample_explore_point_idx_array = np.vstack(
-            sample_explore_point_idx_array)
+        if len(sample_explore_point_idx_array) > 0:
+            sample_explore_point_idx_array = np.vstack(
+                sample_explore_point_idx_array)
 
         return sample_explore_point_idx_array
 
