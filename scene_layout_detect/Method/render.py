@@ -64,7 +64,7 @@ def renderPolygon(camera_point, point_array, delta_angle):
     pcd = getProjectPCD(camera_point, point_array)
     polygon_pcd = getPolygonPCD(camera_point, point_array, delta_angle)
 
-    drawGeometries([pcd, polygon_pcd])
+    drawGeometries([pcd, polygon_pcd], "render::renderPolygon")
     return True
 
 
