@@ -7,9 +7,10 @@ import numpy as np
 import open3d as o3d
 
 
-def generateLayoutMesh(floor_array, wall_height=3):
-    top_floor_array = deepcopy(floor_array)
-    top_floor_array[:, 2] += wall_height
+def generateLayoutMesh(floor_array, wall_height=3, top_floor_array=None):
+    if top_floor_array is None:
+        top_floor_array = deepcopy(floor_array)
+        top_floor_array[:, 2] += wall_height
 
     verts = np.vstack((floor_array, top_floor_array))
 
