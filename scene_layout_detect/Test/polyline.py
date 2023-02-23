@@ -1,33 +1,29 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
 import cv2
+
+from scene_layout_detect.Method.boundary import getBoundary
 
 
 def test():
-    image_idx = 0
-
     image_file_folder = "../auto-cad-recon/output/explore/"
-    image_file_path = image_file_folder + str(image_idx) + ".png"
+    dist_max = 4
+    render = True
+    print_progress = True
 
-    image = cv2.imread(image_file_path)
-    image_gray = cv2.cvtColor(image, cv2.COLOR_RGB2GRAY)
+    image_filename_list = os.listdir(image_file_folder)
 
-    cv2.imshow('image_gray', image_gray)
+    for image_filename in image_filename_list:
+        if image_filename[-4:] != ".png":
+            continue
 
-    _, thresh = cv2.threshold(image_gray, 0, 255,
-                              cv2.THRESH_BINARY + cv2.THRESH_OTSU)
-    contours, hierarchy = cv2.findContours(thresh, 3, 2)
-    cnt = contours[0]
+        image_file_path = image_file_folder + image_filename
 
-    cv2.imshow('thresh', thresh)
+        explore_map = cv2.imread(image_file_path)
 
-    approx = cv2.approxPolyDP(cnt, 3, True)
+        boundary = getBoundary(explore_map, dist_max, render, print_progress)
 
-    render_image = cv2.cvtColor(image_gray, cv2.COLOR_GRAY2BGR)
-    cv2.polylines(render_image, [approx], True, (255, 0, 0), 2)
-
-    print("len(approx) = " + str(len(approx)))
-    cv2.imshow('approxPloyDP', render_image)
     cv2.waitKey(0)
     return True
