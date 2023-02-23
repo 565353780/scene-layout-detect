@@ -1,12 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from copy import deepcopy
-from math import ceil
-
+import os
 import cv2
 import numpy as np
 import open3d as o3d
+from math import ceil
+from copy import deepcopy
 
 from scene_layout_detect.Config.color import (FREE_COLOR, OBSTACLE_COLOR,
                                               UNKNOWN_COLOR)
@@ -28,6 +28,8 @@ class ExploreMap(object):
         self.floor_z_value = None
         self.map_start_point = None
         self.map = None
+
+        self.map_idx = 0
         return
 
     def reset(self):
@@ -177,4 +179,10 @@ class ExploreMap(object):
         if render:
             cv2.imshow("explore_map", self.map)
             cv2.waitKey(1)
+
+        if False:
+            os.makedirs("./output/explore/", exist_ok=True)
+            cv2.imwrite("./output/explore/" + str(self.map_idx) + ".png",
+                        self.map)
+            self.map_idx += 1
         return True
