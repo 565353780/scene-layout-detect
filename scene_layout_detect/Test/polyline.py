@@ -10,7 +10,7 @@ from scene_layout_detect.Method.boundary import getBoundary
 def test():
     image_file_folder = "../auto-cad-recon/output/explore/"
     dist_max = 4
-    render = True
+    render = False
     print_progress = True
 
     image_filename_list = os.listdir(image_file_folder)
