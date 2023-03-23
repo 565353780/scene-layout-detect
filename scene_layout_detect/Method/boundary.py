@@ -6,6 +6,8 @@ from copy import deepcopy
 import cv2
 import numpy as np
 
+from scene_layout_detect.Method.cluster import clusterPolylines
+
 
 def getPolylines(explore_map, dist_max=4):
     image_gray = cv2.cvtColor(explore_map, cv2.COLOR_RGB2GRAY)
@@ -22,19 +24,6 @@ def getPolylines(explore_map, dist_max=4):
     return polylines
 
 
-def clusterLines(polylines, print_progress=False):
-    line_cluster_idx_list = range(len(polylines))
-
-    used_line_idx_list = []
-    for i in range(len(polylines)):
-        if i in used_line_idx_list:
-            continue
-
-        new_line_cluster = [i]
-        line_cluster
-    return line_cluster
-
-
 global render_idx
 render_idx = 1
 
@@ -42,7 +31,7 @@ render_idx = 1
 def getBoundary(explore_map, dist_max=4, render=False, print_progress=False):
     polylines = getPolylines(explore_map, dist_max)
 
-    line_cluster = clusterLines(polylines, print_progress)
+    line_cluster = clusterPolylines(polylines, print_progress)
 
     if render:
         render_image = deepcopy(explore_map)
