@@ -3,6 +3,11 @@
 
 import numpy as np
 
+from scene_layout_detect.Data.line import Line
+
+mode_list = ['cut', 'merge']
+mode = 'merge'
+
 
 def getClusterEnergy(polylines, line_cluster_idx_list):
     cluster_energy = 0
@@ -60,10 +65,27 @@ def getCutLineClusterIdxLists(polylines,
     return cut_line_cluster_idx_lists
 
 
-def clusterPolylines(polylines, print_progress=False):
+def clusterPolylinesByCut(polylines, print_progress=False):
     for i in range(len(polylines)):
         line_cluster_idx_lists = getCutLineClusterIdxLists(polylines, i)
         print(line_cluster_idx_lists)
+        print(np.array(line_cluster_idx_lists).shape)
+        if i > 0:
+            exit()
 
     exit()
     return line_cluster_idx_list
+
+
+def clusterPolylinesByMerge(polylines, print_progress=False):
+    current_error = getLineParallelError(polylines, start_idx, end_idx)
+    return line_cluster_idx_list
+
+
+def clusterPolylines(polylines, print_progress=False):
+    assert mode in mode_list
+
+    if mode == 'cut':
+        return clusterPolylinesByCut(polylines, print_progress)
+    if mode == 'merge':
+        return clusterPolylinesByMerge(polylines, print_progress)
