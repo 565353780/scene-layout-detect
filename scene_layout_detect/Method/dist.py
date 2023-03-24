@@ -5,8 +5,22 @@ import numpy as np
 from scipy import optimize
 
 
-def line(x, A, B):
-    return A * x + B
+def fLine(xy, A, B, C):
+    x, y = xy
+    return A * x + B * y + C
+
+
+def fitLine(point_list):
+    print("point_list is")
+    print(point_list)
+    print(np.array(point_list))
+    zero_list = np.zeros(len(point_list))
+    print(zero_list)
+
+    A, B, C = optimize.curve_fit(fLine, point_list, zero_list)
+    print(A, B, C)
+    exit()
+    return A, B, C
 
 
 def getPointDistToLine(point, line):
