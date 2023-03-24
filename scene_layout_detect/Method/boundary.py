@@ -21,6 +21,8 @@ def getPolylines(explore_map, dist_max=4):
     cnt = contours[0]
 
     polylines = cv2.approxPolyDP(cnt, dist_max, True)
+
+    polylines = polylines.reshape(-1, 2)
     return polylines
 
 
