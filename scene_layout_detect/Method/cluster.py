@@ -6,8 +6,8 @@ import numpy as np
 from scene_layout_detect.Data.line import Line
 from scene_layout_detect.Method.dist import fitLine
 
-mode_list = ['cut', 'merge']
-mode = 'merge'
+mode_list = ['cut', 'merge', 'angle']
+mode = 'angle'
 
 
 def getClusterEnergy(polylines, line_cluster_idx_list):
@@ -129,6 +129,11 @@ def clusterPolylinesByMerge(polylines, print_progress=False):
     return merged_polylines
 
 
+def clusterPolylinesByAngle(polylines, print_progress=False):
+    merged_polylines = mergeLineByParallelError(polylines)
+    return merged_polylines
+
+
 def clusterPolylines(polylines, print_progress=False):
     assert mode in mode_list
 
@@ -136,3 +141,5 @@ def clusterPolylines(polylines, print_progress=False):
         return clusterPolylinesByCut(polylines, print_progress)
     if mode == 'merge':
         return clusterPolylinesByMerge(polylines, print_progress)
+    if mode == 'angle':
+        return clusterPolylinesByAngle(polylines, print_progress)
