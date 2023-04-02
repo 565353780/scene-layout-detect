@@ -44,7 +44,7 @@ def fitLine(point_list):
     assert len(point_list) > 0
 
     if isSamePoint(point_list):
-        return None, None, None
+        return None, point_list[0][0], point_list[0][1]
 
     point_array = np.array(point_list, dtype=float)
 

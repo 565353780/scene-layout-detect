@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from scene_layout_detect.Method.dist import fitLine
+from scene_layout_detect.Method.dist import fitLine, getPointDistToLine
 
 
 def outputLine(line_param):
@@ -13,9 +13,21 @@ def outputLine(line_param):
     return True
 
 
+def testPointList(point_list):
+    test_point = [0, 0]
+
+    line_param = fitLine(point_list)
+    outputLine(line_param)
+
+    dist = getPointDistToLine(test_point, line_param)
+    print("dist =", dist)
+    return True
+
+
 def test():
-    outputLine(fitLine([[0, 1], [1, 2], [2, 3]]))
-    outputLine(fitLine([[322, 74], [304, 63], [303, 56]]))
-    outputLine(fitLine([[0, 0], [1, 0], [2, 0]]))
-    outputLine(fitLine([[0, 0], [0, 1], [0, 2]]))
+    testPointList([[0, 1], [1, 2], [2, 3]])
+    testPointList([[322, 74], [304, 63], [303, 56]])
+    testPointList([[0, 0], [1, 0], [2, 0]])
+    testPointList([[0, 0], [0, 1], [0, 2]])
+    testPointList([[2, 2], [2, 2], [2, 2]])
     return True
