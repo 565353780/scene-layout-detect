@@ -6,7 +6,10 @@ from scene_layout_detect.Method.dist import fitLine
 
 def outputLine(line_param):
     A, B, C = line_param
-    print(str(A) + ' x + ' + str(B) + ' y + ' + str(C) + ' = 0')
+    if A is None:
+        print('this line is a single point')
+    else:
+        print(str(A) + ' x + ' + str(B) + ' y + ' + str(C) + ' = 0')
     return True
 
 

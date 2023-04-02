@@ -19,7 +19,33 @@ def f_line_inv(y, A_inv, B_inv):
     return A_inv * y + B_inv
 
 
+def getPointDistToPoint(point_1, point_2):
+    point_1_array = np.array(point_1, dtype=float)
+    point_2_array = np.array(point_2, dtype=float)
+    return np.linalg.norm(point_1_array - point_2_array)
+
+
+def isSamePoint(point_list):
+    point_num = len(point_list)
+
+    if point_num < 2:
+        return True
+
+    first_point = point_list[0]
+
+    for i in range(1, point_num):
+        point = point_list[i]
+        if point[0] != first_point[0] or point[1] != first_point[1]:
+            return False
+    return True
+
+
 def fitLine(point_list):
+    assert len(point_list) > 0
+
+    if isSamePoint(point_list):
+        return None, None, None
+
     point_array = np.array(point_list, dtype=float)
 
     A_inv, B_inv = optimize.curve_fit(f_line, point_array[:, 1],
@@ -33,20 +59,13 @@ def fitLine(point_list):
     return A, -1.0, B
 
 
-def getPointDistToLine(point, line):
-    return 0
+def getPointDistToLine(point, line_param):
+    A, B, C = line_param
 
+    line_weight = A * A + B * B
 
-def get_distance_from_point_to_line(point, line_point1, line_point2):
-    if line_point1 == line_point2:
-        point_array = np.array(point)
-        point1_array = np.array(line_point1)
-        return np.linalg.norm(point_array - point1_array)
-
-    A = line_point2[1] - line_point1[1]
-    B = line_point1[0] - line_point2[0]
-    C = (line_point1[1] - line_point2[1]) * line_point1[0] + \
-        (line_point2[0] - line_point1[0]) * line_point1[1]
+    if line_weight == 0:
+        return getPointDistToPoint(point, )
 
     distance = np.abs(A * point[0] + B * point[1] + C) / (np.sqrt(A**2 + B**2))
     return distance
