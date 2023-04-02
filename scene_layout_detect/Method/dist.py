@@ -62,10 +62,14 @@ def fitLine(point_list):
 def getPointDistToLine(point, line_param):
     A, B, C = line_param
 
+    if A is None:
+        line_point = [B, C]
+
+        return getPointDistToPoint(point, line_point)
+
     line_weight = A * A + B * B
 
-    if line_weight == 0:
-        return getPointDistToPoint(point, )
+    assert line_weight > 0
 
-    distance = np.abs(A * point[0] + B * point[1] + C) / (np.sqrt(A**2 + B**2))
+    distance = np.abs(A * point[0] + B * point[1] + C) / np.sqrt(line_weight)
     return distance
