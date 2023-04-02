@@ -4,7 +4,7 @@
 import numpy as np
 
 from scene_layout_detect.Data.line import Line
-from scene_layout_detect.Method.dist import fitLine
+from scene_layout_detect.Method.dist import fitLine, getPointDistToLine
 
 mode_list = ['cut', 'merge', 'angle']
 mode = 'angle'
@@ -89,13 +89,20 @@ def getLineParallelError(polylines, start_idx, end_idx):
             end_point_idx = end_idx % point_num
             point_list.append(polylines[end_point_idx])
 
-    line = fitLine(point_list)
+    line_param = fitLine(point_list)
 
     parallel_error = 0
+    for point in point_list:
+        parallel_error += getPointDistToLine(point, line_param)
+
     return parallel_error
 
 
 def mergeLineByIdx(polylines, start_idx, end_idx):
+    print(polylines)
+    print(start_idx)
+    print(end_idx)
+    exit()
     merged_polylines = []
     return merged_polylines
 
