@@ -89,8 +89,6 @@ def getLineParallelError(polylines, start_idx, end_idx):
             end_point_idx = end_idx % point_num
             point_list.append(polylines[end_point_idx])
 
-    point_list = np.array(point_list, dtype=float)
-
     line = fitLine(point_list)
 
     parallel_error = 0

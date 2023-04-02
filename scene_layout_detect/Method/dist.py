@@ -6,21 +6,31 @@ from scipy import optimize
 
 
 def fLine(xy, A, B, C):
-    x, y = xy
+    x = xy[:, 0]
+    y = xy[:, 1]
     return A * x + B * y + C
 
 
-def fitLine(point_list):
-    print("point_list is")
-    print(point_list)
-    print(np.array(point_list))
-    zero_list = np.zeros(len(point_list))
-    print(zero_list)
+def f_line(x, A, B):
+    return A * x + B
 
-    A, B, C = optimize.curve_fit(fLine, point_list, zero_list)
-    print(A, B, C)
-    exit()
-    return A, B, C
+
+def f_line_inv(y, A_inv, B_inv):
+    return A_inv * y + B_inv
+
+
+def fitLine(point_list):
+    point_array = np.array(point_list, dtype=float)
+
+    A_inv, B_inv = optimize.curve_fit(f_line, point_array[:, 1],
+                                      point_array[:, 0])[0]
+
+    if A_inv == 0:
+        return 1.0, 0.0, -B_inv
+
+    A, B = optimize.curve_fit(f_line, point_array[:, 0], point_array[:, 1])[0]
+
+    return A, -1.0, B
 
 
 def getPointDistToLine(point, line):
