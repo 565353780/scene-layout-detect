@@ -1,9 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-import numpy as np
-from scipy import optimize
-
 from scene_layout_detect.Method.dist import fitLine
 
 
@@ -18,5 +15,4 @@ def test():
     outputLine(fitLine([[322, 74], [304, 63], [303, 56]]))
     outputLine(fitLine([[0, 0], [1, 0], [2, 0]]))
     outputLine(fitLine([[0, 0], [0, 1], [0, 2]]))
-    exit()
     return True
