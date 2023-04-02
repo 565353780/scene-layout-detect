@@ -4,6 +4,7 @@
 from copy import deepcopy
 from multiprocessing import Process
 
+import cv2
 import numpy as np
 import open3d as o3d
 from scannet_sim_manage.Method.render import drawGeometries
@@ -97,4 +98,9 @@ def drawMeshList(mesh_list, window_name="Open3D"):
     process.start()
     #  process.join()
     #  process.close()
+    return True
+
+
+def renderPolyline(polyline, width=1000, height=1000):
+    points = np.array(polyline, dtype=float)
     return True
