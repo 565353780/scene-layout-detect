@@ -14,7 +14,6 @@ class PolylineRenderer(object):
                  free_width=50,
                  render_width=2560,
                  render_height=1440,
-                 text_size=1,
                  debug=False):
         self.render_mode_list = ['source', 'cluster']
 
@@ -39,7 +38,6 @@ class PolylineRenderer(object):
 
         self.image_list = []
         self.text_color = [0, 0, 255]
-        self.text_size = text_size
         self.text_line_width = 1
 
         self.cluster_idx_list = None
