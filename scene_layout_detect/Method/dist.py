@@ -24,7 +24,8 @@ def f_line_inv(y, A_inv, B_inv):
 def getPointDistToPoint(point_1, point_2):
     point_1_array = np.array(point_1, dtype=float)
     point_2_array = np.array(point_2, dtype=float)
-    return np.linalg.norm(point_1_array - point_2_array)
+    dist = np.linalg.norm(point_1_array - point_2_array)
+    return dist
 
 
 def isSamePoint(point_list):

@@ -106,8 +106,6 @@ def getLineParallelError(polylines, start_idx, end_idx):
 
 
 def mergeLineByIdx(polylines, start_idx, end_idx):
-    renderPolyline(polylines, 'source')
-
     point_num = len(polylines)
 
     print(start_idx)
@@ -160,9 +158,25 @@ def mergeLineByParallelError(polylines):
                 min_error_end_idx = i + j
 
     if min_error_start_idx is None:
-        return polylines
+        return polylines, min_error
 
-    return mergeLineByIdx(polylines, min_error_start_idx, min_error_end_idx)
+    merged_polylines = mergeLineByIdx(polylines, min_error_start_idx,
+                                      min_error_end_idx)
+    return merged_polylines, min_error
+
+
+def mergeAllLinesByParallelError(polylines):
+    merged_polylines = np.array(polylines, dtype=float)
+
+    while True:
+        merged_polylines, min_error = mergeLineByParallelError(
+            merged_polylines)
+        print("min_error")
+        print(min_error)
+
+        if min_error > 100:
+            break
+    return merged_polylines
 
 
 def clusterPolylinesByMerge(polylines, print_progress=False):
@@ -171,7 +185,7 @@ def clusterPolylinesByMerge(polylines, print_progress=False):
 
 
 def clusterPolylinesByAngle(polylines, print_progress=False):
-    merged_polylines = mergeLineByParallelError(polylines)
+    merged_polylines = mergeAllLinesByParallelError(polylines)
     return merged_polylines
 
 
