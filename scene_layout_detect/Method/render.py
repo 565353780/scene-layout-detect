@@ -4,13 +4,13 @@
 from copy import deepcopy
 from multiprocessing import Process
 
-import cv2
 import numpy as np
 import open3d as o3d
 from scannet_sim_manage.Method.render import drawGeometries
 
 from scene_layout_detect.Method.polygon import getPolygon
 from scene_layout_detect.Method.project import getProjectPoints
+from scene_layout_detect.Module.polyline_renderer import PolylineRenderer
 
 
 def getPointsPCD(point_array, color=None):
@@ -101,6 +101,23 @@ def drawMeshList(mesh_list, window_name="Open3D"):
     return True
 
 
-def renderPolyline(polyline, width=1000, height=1000):
-    points = np.array(polyline, dtype=float)
+def renderPolyline(polyline, render_mode='source', cluster_idx_list=None):
+    width = 1920
+    height = 1080
+    free_width = 50
+    render_width = 2560
+    render_height = 1440
+    debug = True
+    line_width = 3
+    text_color = [0, 0, 255]
+    text_size = 1
+    text_line_width = 1
+    wait_key = 0
+    window_name = '[Renderer][' + render_mode + ']'
+
+    polyline_renderer = PolylineRenderer(width, height, free_width,
+                                         render_width, render_height, debug)
+    polyline_renderer.render(polyline, render_mode, line_width, text_color,
+                             text_size, text_line_width, cluster_idx_list)
+    polyline_renderer.show(wait_key, window_name)
     return True

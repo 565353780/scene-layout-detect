@@ -4,7 +4,9 @@
 import numpy as np
 
 from scene_layout_detect.Data.line import Line
-from scene_layout_detect.Method.dist import fitLine, getPointDistToLine
+from scene_layout_detect.Method.dist import (fitLine, getPointDistToLine,
+                                             getProjectPoint)
+from scene_layout_detect.Method.render import renderPolyline
 
 mode_list = ['cut', 'merge', 'angle']
 mode = 'angle'
@@ -78,7 +80,7 @@ def clusterPolylinesByCut(polylines, print_progress=False):
     return line_cluster_idx_list
 
 
-def getLineParallelError(polylines, start_idx, end_idx):
+def getPointList(polylines, start_idx, end_idx):
     point_num = len(polylines)
 
     point_list = []
@@ -89,6 +91,11 @@ def getLineParallelError(polylines, start_idx, end_idx):
             end_point_idx = end_idx % point_num
             point_list.append(polylines[end_point_idx])
 
+    return point_list
+
+
+def getLineParallelError(polylines, start_idx, end_idx):
+    point_list = getPointList(polylines, start_idx, end_idx)
     line_param = fitLine(point_list)
 
     parallel_error = 0
@@ -99,11 +106,40 @@ def getLineParallelError(polylines, start_idx, end_idx):
 
 
 def mergeLineByIdx(polylines, start_idx, end_idx):
-    print(polylines)
+    renderPolyline(polylines, 'source')
+
+    point_num = len(polylines)
+
     print(start_idx)
     print(end_idx)
-    exit()
+
+    point_list = getPointList(polylines, start_idx, end_idx)
+    line_param = fitLine(point_list)
+
+    real_end_idx = (end_idx + 1) % point_num
+
+    start_point = getProjectPoint(polylines[start_idx], line_param)
+    end_point = getProjectPoint(polylines[real_end_idx], line_param)
+
     merged_polylines = []
+
+    merged_polylines.append(start_point)
+    merged_polylines.append(end_point)
+
+    if real_end_idx < start_idx:
+        for i in range(real_end_idx + 1, start_idx):
+            merged_polylines.append(polylines[i])
+
+        merged_polylines = np.array(merged_polylines, dtype=float)
+        return merged_polylines
+
+    for i in range(real_end_idx + 1, start_idx + point_num):
+        current_real_idx = i % point_num
+        merged_polylines.append(polylines[current_real_idx])
+
+    merged_polylines = np.array(merged_polylines, dtype=float)
+
+    renderPolyline(merged_polylines, 'source')
     return merged_polylines
 
 

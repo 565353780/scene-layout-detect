@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+from copy import deepcopy
+
 import numpy as np
 from scipy import optimize
 
@@ -56,7 +58,10 @@ def fitLine(point_list):
 
     A, B = optimize.curve_fit(f_line, point_array[:, 0], point_array[:, 1])[0]
 
-    return A, -1.0, B
+    if A > 0:
+        return A, -1.0, B
+
+    return -A, 1.0, -B
 
 
 def getPointDistToLine(point, line_param):
@@ -73,3 +78,30 @@ def getPointDistToLine(point, line_param):
 
     distance = np.abs(A * point[0] + B * point[1] + C) / np.sqrt(line_weight)
     return distance
+
+
+def getProjectPoint(point, line_param):
+    A, B, C = line_param
+
+    if A is None:
+        return np.array([B, C], dtype=float)
+
+    project_point = deepcopy(np.array(point, dtype=float))
+
+    point_value = A * point[0] + B * point[1] + C
+
+    if point_value == 0:
+        return project_point
+
+    line_weight = np.sqrt(A * A + B * B)
+
+    move_dist = getPointDistToLine(point, line_param)
+
+    if point_value > 0:
+        move_direction = [-A / line_weight, -B / line_weight]
+    else:
+        move_direction = [A / line_weight, B / line_weight]
+
+    project_point[0] = project_point[0] + move_direction[0] * move_dist
+    project_point[1] = project_point[1] + move_direction[1] * move_dist
+    return project_point
