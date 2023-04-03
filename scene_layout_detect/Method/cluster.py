@@ -136,8 +136,6 @@ def mergeLineByIdx(polylines, start_idx, end_idx):
         merged_polylines.append(polylines[current_real_idx])
 
     merged_polylines = np.array(merged_polylines, dtype=float)
-
-    renderPolyline(merged_polylines, 'source')
     return merged_polylines
 
 
@@ -149,13 +147,15 @@ def mergeLineByParallelError(polylines):
     min_error_end_idx = None
 
     for i in range(point_num):
-        for j in range(2, point_num - 1):
-            current_error = getLineParallelError(polylines, i, i + j)
+        #FIXME: tmp use j = i + 2, since this will always result on minimal error
+        #  for j in range(2, point_num - 1):
+        j = i + 2
+        current_error = getLineParallelError(polylines, i, i + j)
 
-            if current_error < min_error:
-                min_error = current_error
-                min_error_start_idx = i
-                min_error_end_idx = i + j
+        if current_error < min_error:
+            min_error = current_error
+            min_error_start_idx = i
+            min_error_end_idx = i + j
 
     if min_error_start_idx is None:
         return polylines, min_error
@@ -168,14 +168,21 @@ def mergeLineByParallelError(polylines):
 def mergeAllLinesByParallelError(polylines):
     merged_polylines = np.array(polylines, dtype=float)
 
+    running_time = 0
     while True:
-        merged_polylines, min_error = mergeLineByParallelError(
+        new_merged_polylines, min_error = mergeLineByParallelError(
             merged_polylines)
-        print("min_error")
-        print(min_error)
 
-        if min_error > 100:
+        if min_error > 40:
             break
+
+        print("min_error =", min_error)
+        merged_polylines = new_merged_polylines
+        running_time += 1
+
+    renderPolyline(merged_polylines, 'source')
+
+    print("running_time =", running_time)
     return merged_polylines
 
 
