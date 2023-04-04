@@ -29,6 +29,7 @@ def demo():
         [1, 2, 0],
         [0, 2, 0],
         [0, 1, 0],
+        [0, 0.5, 0],
     ], explore_paint_radius, render)
     layout_map_builder.updateLayoutMesh(wall_height, render)
     layout_map_builder.updateExplorePointIdx(min_explore_point_dist, render)
