@@ -10,6 +10,7 @@ import numpy as np
 from scannet_sim_manage.Method.render import drawGeometries
 
 from scene_layout_detect.Method.mesh import generateLayoutMesh
+from scene_layout_detect.Method.boundary import getBoundary
 from scene_layout_detect.Method.render import renderPolygonAndFloor
 
 
@@ -109,21 +110,21 @@ class LayoutMap(object):
             dtype=float)
         return point
 
-    def generateLayoutFloor(self, unit_size=0.01, free_width=50, render=False):
+    def generateLayoutFloor(self,
+                            explore_map=None,
+                            unit_size=0.01,
+                            free_width=50,
+                            render=False):
+
         self.updateMap(unit_size, free_width)
 
-        bound_mask = np.dstack(np.where(self.map == 255))[0]
-
-        rect = cv2.minAreaRect(bound_mask)
-        box = cv2.boxPoints(rect)
-
-        if render:
-            draw_box = box[..., ::-1].astype(int)
-            cv2.polylines(self.map, [draw_box], True, 128, 1)
-            cv2.imshow("map_" + str(len(self.polygon_list)), self.map)
+        if explore_map is None:
+            boundary = getBoundary(self.map, 'box', render=render)
+        else:
+            boundary = getBoundary(explore_map, 'polygon', render=render)
 
         floor_point_list = []
-        for pixel in box:
+        for pixel in boundary:
             point = self.getPointFromPixel(pixel[0], pixel[1])
             floor_point_list.append([point[0], point[1], 0.0])
 
@@ -134,11 +135,12 @@ class LayoutMap(object):
         return True
 
     def generateLayoutMesh(self,
+                           explore_map=None,
                            unit_size=0.01,
                            free_width=50,
                            wall_height=3,
                            render=False):
-        self.generateLayoutFloor(unit_size, free_width, render)
+        self.generateLayoutFloor(explore_map, unit_size, free_width, render)
 
         layout_mesh = generateLayoutMesh(self.floor_array, wall_height)
 

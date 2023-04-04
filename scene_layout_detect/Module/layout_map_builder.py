@@ -42,6 +42,9 @@ class LayoutMapBuilder(object):
                   point_array,
                   explore_paint_radius=0.1,
                   render=False):
+        camera_point = np.array(camera_point, dtype=float)
+        point_array = np.array(point_array, dtype=float)
+
         if render:
             renderPolygon(camera_point, point_array, self.delta_angle)
 
@@ -54,12 +57,14 @@ class LayoutMapBuilder(object):
     def addBound(self, bound_point_array, render=False):
         polygon = deepcopy(bound_point_array)
         polygon[:, 2] = 0
+        self.explore_map.updateFree(polygon)
         self.layout_map.addPolygon(polygon)
         return True
 
     def updateLayoutMesh(self, wall_height=3, render=False):
         self.layout_mesh = self.layout_map.generateLayoutMesh(
-            self.unit_size, self.free_width, wall_height, render)
+            self.explore_map, self.unit_size, self.free_width, wall_height,
+            render)
         return True
 
     def updateExplorePointIdx(self, min_explore_point_dist=5, render=False):
