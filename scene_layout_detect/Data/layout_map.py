@@ -126,7 +126,8 @@ class LayoutMap(object):
         floor_point_list = []
         for pixel in boundary:
             point = self.getPointFromPixel(pixel[0], pixel[1])
-            floor_point_list.append([point[0], point[1], 0.0])
+            #FIXME: need to check point order
+            floor_point_list.append([point[1], point[0], 0.0])
 
         self.floor_array = np.array(floor_point_list)
 
@@ -145,5 +146,5 @@ class LayoutMap(object):
         layout_mesh = generateLayoutMesh(self.floor_array, wall_height)
 
         if render:
-            drawGeometries([layout_mesh])
+            drawGeometries([layout_mesh], 'generateLayoutMesh::layout_mesh')
         return layout_mesh

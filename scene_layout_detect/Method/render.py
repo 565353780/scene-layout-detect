@@ -53,19 +53,19 @@ def getPolygonPCD(camera_point, point_array, delta_angle):
 
 def renderProjectPoints(camera_point, point_array):
     pcd = getProjectPCD(camera_point, point_array)
-    drawGeometries([pcd])
+    drawGeometries([pcd], 'renderProjectPoints::pcd')
     return True
 
 
 def renderPolygon(camera_point, point_array, delta_angle):
     points = point_array[np.where(point_array[:, 0] != float("inf"))[0]]
     pcd = getPointsPCD(points)
-    drawGeometries([pcd])
+    drawGeometries([pcd], 'renderPolygon::pcd')
 
     pcd = getProjectPCD(camera_point, point_array)
     polygon_pcd = getPolygonPCD(camera_point, point_array, delta_angle)
 
-    drawGeometries([pcd, polygon_pcd], "render::renderPolygon")
+    drawGeometries([pcd, polygon_pcd], "renderPolygon::pcd and polygon_pcd")
     return True
 
 
@@ -75,7 +75,7 @@ def renderPolygonList(polygon_list):
         pcd = getPointsPCD(polygon)
         pcd_list.append(pcd)
 
-    drawGeometries(pcd_list)
+    drawGeometries(pcd_list, 'renderPolygonList::pcd_list')
     return True
 
 
@@ -88,7 +88,7 @@ def renderPolygonAndFloor(polygon_list, floor_array):
     floor_pcd = getPointsPCD(floor_array, [1, 0, 0])
     pcd_list.append(floor_pcd)
 
-    drawGeometries(pcd_list)
+    drawGeometries(pcd_list, 'renderPolygonAndFloor::pcd_list')
     return True
 
 

@@ -55,6 +55,8 @@ class LayoutMapBuilder(object):
         return True
 
     def addBound(self, bound_point_array, render=False):
+        bound_point_array = np.array(bound_point_array, dtype=float)
+
         polygon = deepcopy(bound_point_array)
         polygon[:, 2] = 0
         self.explore_map.updateFree(polygon)
