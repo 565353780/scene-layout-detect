@@ -4,6 +4,8 @@
 import sys
 sys.path.append('../scannet-sim-manage')
 
+import cv2
+
 from scene_layout_detect.Module.layout_map_builder import LayoutMapBuilder
 
 
@@ -20,9 +22,11 @@ def demo():
 
     layout_map_builder.addPoints([0, 0, 0], [
         [1, 0, 0],
+        [2, 0, 0],
         [1, 1, 0],
         [0, 1, 0],
     ], explore_paint_radius, render)
     layout_map_builder.updateLayoutMesh(wall_height, render)
     layout_map_builder.updateExplorePointIdx(min_explore_point_dist, render)
+    cv2.waitKey(0)
     return True
