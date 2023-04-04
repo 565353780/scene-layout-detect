@@ -138,7 +138,10 @@ def generateFloorMesh(floor_array, delta_dist=0.05):
     return floor_mesh
 
 
-def generateLayoutMesh(floor_array, wall_height=3, top_floor_array=None):
+def generateLayoutMesh(floor_array,
+                       wall_height=3,
+                       top_floor_array=None,
+                       expand_scale=1.0):
     point_num = len(floor_array)
 
     if top_floor_array is None:
@@ -153,7 +156,6 @@ def generateLayoutMesh(floor_array, wall_height=3, top_floor_array=None):
         triangles.append([next_idx, i, next_idx + point_num])
         triangles.append([i + point_num, next_idx + point_num, i])
 
-    expand_scale = 1.1
     if expand_scale != 1.0:
         center = np.mean(floor_array, axis=0)
         floor_array -= center
