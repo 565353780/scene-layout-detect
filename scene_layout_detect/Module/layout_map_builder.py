@@ -63,7 +63,7 @@ class LayoutMapBuilder(object):
 
     def updateLayoutMesh(self, wall_height=3, render=False):
         self.layout_mesh = self.layout_map.generateLayoutMesh(
-            self.explore_map, self.unit_size, self.free_width, wall_height,
+            self.explore_map.map, self.unit_size, self.free_width, wall_height,
             render)
         return True
 

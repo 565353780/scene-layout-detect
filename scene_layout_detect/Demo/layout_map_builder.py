@@ -19,9 +19,9 @@ def demo():
     layout_map_builder = LayoutMapBuilder(delta_angle, unit_size, free_width)
 
     layout_map_builder.addPoints([0, 0, 0], [
-        [100, 0, 0],
-        [100, 100, 0],
-        [0, 100, 0],
+        [1, 0, 0],
+        [1, 1, 0],
+        [0, 1, 0],
     ], explore_paint_radius, render)
     layout_map_builder.updateLayoutMesh(wall_height, render)
     layout_map_builder.updateExplorePointIdx(min_explore_point_dist, render)

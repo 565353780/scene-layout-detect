@@ -10,7 +10,10 @@ from scene_layout_detect.Method.cluster import clusterPolylines
 
 
 def getPolylines(explore_map, dist_max=4):
-    image_gray = cv2.cvtColor(explore_map, cv2.COLOR_RGB2GRAY)
+    if len(explore_map.shape) > 2:
+        image_gray = cv2.cvtColor(explore_map, cv2.COLOR_RGB2GRAY)
+    else:
+        image_gray = explore_map
 
     unknown_mask = (image_gray < 192) & (image_gray > 64)
 
@@ -51,7 +54,11 @@ def getPolygon(explore_map, dist_max=4, render=False):
 
     if render:
         render_image = deepcopy(explore_map)
-        cv2.polylines(render_image, [polygon], True, (0, 0, 255), 4)
+        if len(render_image.shape) > 2:
+            cv2.polylines(render_image, np.int32([polygon]), True, (0, 0, 255),
+                          1)
+        else:
+            cv2.polylines(render_image, np.int32([polygon]), True, 255, 1)
         global render_idx
         cv2.imshow("explore_map polygon " + str(render_idx), render_image)
         render_idx += 1
