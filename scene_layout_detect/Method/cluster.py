@@ -166,23 +166,20 @@ def mergeLineByParallelError(polylines):
 
 
 def mergeAllLinesByParallelError(polylines):
+    max_error = 20
+
     merged_polylines = np.array(polylines, dtype=float)
 
-    running_time = 0
     while True:
         new_merged_polylines, min_error = mergeLineByParallelError(
             merged_polylines)
 
-        if min_error > 40:
+        if min_error > max_error:
             break
 
-        print("min_error =", min_error)
         merged_polylines = new_merged_polylines
-        running_time += 1
 
-    renderPolyline(merged_polylines, 'source')
-
-    print("running_time =", running_time)
+    #  renderPolyline(merged_polylines, 'source')
     return merged_polylines
 
 
