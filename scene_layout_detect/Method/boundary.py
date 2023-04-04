@@ -30,19 +30,40 @@ global render_idx
 render_idx = 1
 
 
-def getBoundary(explore_map, dist_max=4, render=False, print_progress=False):
-    polylines = getPolylines(explore_map, dist_max)
+def getBox(layout_map, render=False):
+    bound_mask = np.dstack(np.where(layout_map == 255))[0]
+    rect = cv2.minAreaRect(bound_mask)
+    box = cv2.boxPoints(rect)
 
-    line_cluster = clusterPolylines(polylines, print_progress)
+    if render:
+        render_image = deepcopy(layout_map)
+        draw_box = box[..., ::-1].astype(int)
+        cv2.polylines(render_image, [draw_box], True, 128, 1)
+        global render_idx
+        cv2.imshow("layout_map box " + str(render_idx), render_image)
+        render_idx += 1
+    return box
+
+
+def getPolygon(explore_map, dist_max=4, render=False):
+    polylines = getPolylines(explore_map, dist_max)
+    polygon = clusterPolylines(polylines)
 
     if render:
         render_image = deepcopy(explore_map)
-        cv2.polylines(render_image, [polylines], True, (0, 0, 255), 4)
+        cv2.polylines(render_image, [polygon], True, (0, 0, 255), 4)
         global render_idx
-        cv2.imshow("polylines " + str(render_idx), render_image)
+        cv2.imshow("explore_map polygon " + str(render_idx), render_image)
         render_idx += 1
+    return polygon
 
-    print(polylines.shape)
 
-    boundary = []
-    return boundary
+def getBoundary(explore_map, mode, dist_max=4, render=False):
+    mode_list = ['box', 'polygon']
+
+    assert mode in mode_list
+
+    if mode == 'box':
+        return getBox(explore_map, render)
+    if mode == 'polygon':
+        return getPolygon(explore_map, dist_max, render)

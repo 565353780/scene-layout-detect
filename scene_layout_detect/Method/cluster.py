@@ -68,7 +68,7 @@ def getCutLineClusterIdxLists(polylines,
     return cut_line_cluster_idx_lists
 
 
-def clusterPolylinesByCut(polylines, print_progress=False):
+def clusterPolylinesByCut(polylines):
     for i in range(len(polylines)):
         line_cluster_idx_lists = getCutLineClusterIdxLists(polylines, i)
         print(line_cluster_idx_lists)
@@ -183,22 +183,22 @@ def mergeAllLinesByParallelError(polylines):
     return merged_polylines
 
 
-def clusterPolylinesByMerge(polylines, print_progress=False):
+def clusterPolylinesByMerge(polylines):
     merged_polylines = mergeLineByParallelError(polylines)
     return merged_polylines
 
 
-def clusterPolylinesByAngle(polylines, print_progress=False):
+def clusterPolylinesByAngle(polylines):
     merged_polylines = mergeAllLinesByParallelError(polylines)
     return merged_polylines
 
 
-def clusterPolylines(polylines, print_progress=False):
+def clusterPolylines(polylines):
     assert mode in mode_list
 
     if mode == 'cut':
-        return clusterPolylinesByCut(polylines, print_progress)
+        return clusterPolylinesByCut(polylines)
     if mode == 'merge':
-        return clusterPolylinesByMerge(polylines, print_progress)
+        return clusterPolylinesByMerge(polylines)
     if mode == 'angle':
-        return clusterPolylinesByAngle(polylines, print_progress)
+        return clusterPolylinesByAngle(polylines)
