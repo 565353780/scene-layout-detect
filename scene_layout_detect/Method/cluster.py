@@ -163,7 +163,7 @@ def mergeLineByParallelError(polylines):
 
 
 def mergeAllLinesByParallelError(polylines):
-    max_error = 20
+    max_error = 4
 
     merged_polylines = np.array(polylines, dtype=float)
 
@@ -174,7 +174,7 @@ def mergeAllLinesByParallelError(polylines):
         if min_error > max_error:
             break
 
-        if new_merged_polylines.shape[0] < 3:
+        if new_merged_polylines.shape[0] < 4:
             break
 
         merged_polylines = new_merged_polylines
