@@ -108,9 +108,6 @@ def getLineParallelError(polylines, start_idx, end_idx):
 def mergeLineByIdx(polylines, start_idx, end_idx):
     point_num = len(polylines)
 
-    print(start_idx)
-    print(end_idx)
-
     point_list = getPointList(polylines, start_idx, end_idx)
     line_param = fitLine(point_list)
 
