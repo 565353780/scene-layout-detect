@@ -174,6 +174,9 @@ def mergeAllLinesByParallelError(polylines):
         if min_error > max_error:
             break
 
+        if new_merged_polylines.shape[0] < 3:
+            break
+
         merged_polylines = new_merged_polylines
 
     #  renderPolyline(merged_polylines, 'source')
