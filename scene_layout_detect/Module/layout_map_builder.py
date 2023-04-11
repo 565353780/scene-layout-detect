@@ -63,10 +63,12 @@ class LayoutMapBuilder(object):
         self.layout_map.addPolygon(polygon)
         return True
 
-    def updateLayoutMesh(self, wall_height=3, render=False):
+    def updateLayoutMesh(self, wall_height=3, dist_max=4, render=False):
+        render = True
+        cv2.imshow('updateLayoutMesh::explore map', self.explore_map.map)
         self.layout_mesh = self.layout_map.generateLayoutMesh(
-            self.explore_map.map, self.unit_size, self.free_width, wall_height,
-            render)
+            self.explore_map, self.unit_size, self.free_width, wall_height,
+            dist_max, render)
         return True
 
     def updateExplorePointIdx(self, min_explore_point_dist=5, render=False):
