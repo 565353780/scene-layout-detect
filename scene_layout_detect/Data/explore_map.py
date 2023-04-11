@@ -96,6 +96,20 @@ class ExploreMap(object):
         self.map = new_map
         return True
 
+    def getPixelFromPoint(self, point):
+        scale_point = point / self.unit_size
+        diff = scale_point - self.map_start_point
+        pixel = np.array([int(diff[0]), int(diff[1])], dtype=int)
+        return pixel
+
+    def getPointFromPixel(self, x, y):
+        translate_x = x + self.map_start_point[0]
+        translate_y = y + self.map_start_point[1]
+        point = np.array(
+            [translate_x * self.unit_size, translate_y * self.unit_size, 0],
+            dtype=float)
+        return point
+
     def updateFree(self, polygon):
         self.updateMap(polygon)
 
@@ -115,20 +129,6 @@ class ExploreMap(object):
         update_free_idx = np.where(update_free_mask == True)
         self.map[update_free_idx] = FREE_COLOR
         return True
-
-    def getPixelFromPoint(self, point):
-        scale_point = point / self.unit_size
-        diff = scale_point - self.map_start_point
-        pixel = np.array([int(diff[0]), int(diff[1])], dtype=int)
-        return pixel
-
-    def getPointFromPixel(self, x, y):
-        translate_x = x + self.map_start_point[0]
-        translate_y = y + self.map_start_point[1]
-        point = np.array(
-            [translate_x * self.unit_size, translate_y * self.unit_size, 0],
-            dtype=float)
-        return point
 
     def updateObstacle(self, point_array, paint_radius=0.1):
         paint_pixel_length = ceil(paint_radius / self.unit_size)
