@@ -25,7 +25,7 @@ def getPolylines(explore_map, dist_max=4):
 
     polylines = cv2.approxPolyDP(cnt, dist_max, True)
 
-    polylines = polylines.reshape(-1, 2)
+    polylines = polylines.reshape(-1, 2)[..., ::-1]
     return polylines
 
 
@@ -55,10 +55,11 @@ def getPolygon(explore_map, dist_max=4, render=False):
     if render:
         render_image = deepcopy(explore_map)
         if len(render_image.shape) > 2:
-            cv2.polylines(render_image, np.int32([polygon]), True, (0, 0, 255),
-                          1)
+            cv2.polylines(render_image,
+                          np.int32([polygon])[..., ::-1], True, (0, 0, 255), 1)
         else:
-            cv2.polylines(render_image, np.int32([polygon]), True, 255, 1)
+            cv2.polylines(render_image,
+                          np.int32([polygon])[..., ::-1], True, 255, 1)
         global render_idx
         cv2.imshow("explore_map polygon " + str(render_idx), render_image)
         render_idx += 1

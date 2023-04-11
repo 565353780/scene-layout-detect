@@ -116,16 +116,13 @@ class LayoutMap(object):
                             free_width=50,
                             dist_max=4,
                             render=False):
-        explore_map = None
         self.updateMap(unit_size, free_width)
 
-        mode = None
         if explore_map is None:
-            mode = 'box'
-            boundary = getBoundary(self.map, mode, dist_max, render)
+            boundary = getBoundary(self.map, 'box', dist_max, render)
         else:
-            mode = 'polygon'
-            boundary = getBoundary(explore_map.map, mode, dist_max, render)
+            boundary = getBoundary(explore_map.map, 'polygon', dist_max,
+                                   render)
 
         floor_point_list = []
         for pixel in boundary:
@@ -133,11 +130,7 @@ class LayoutMap(object):
                 point = self.getPointFromPixel(pixel[0], pixel[1])
             else:
                 point = explore_map.getPointFromPixel(pixel[0], pixel[1])
-
-            if mode == 'box':
-                floor_point_list.append([point[0], point[1], 0.0])
-            else:
-                floor_point_list.append([point[1], point[0], 0.0])
+            floor_point_list.append([point[0], point[1], 0.0])
 
         self.floor_array = np.array(floor_point_list)
 
