@@ -34,7 +34,7 @@ class LayoutMap(object):
         return True
 
     def addPolygon(self, polygon):
-        self.polygon_list.append(polygon)
+        self.polygon_list.append(deepcopy(polygon))
         return True
 
     def updateMap(self, unit_size=0.01, free_width=50, fill=False):

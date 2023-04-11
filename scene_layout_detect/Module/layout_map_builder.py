@@ -55,17 +55,13 @@ class LayoutMapBuilder(object):
         return True
 
     def addBound(self, bound_point_array, render=False):
-        bound_point_array = np.array(bound_point_array, dtype=float)
-
-        polygon = deepcopy(bound_point_array)
+        polygon = np.array(deepcopy(bound_point_array), dtype=float)
         polygon[:, 2] = 0
         self.explore_map.updateFree(polygon)
         self.layout_map.addPolygon(polygon)
         return True
 
     def updateLayoutMesh(self, wall_height=3, dist_max=4, render=False):
-        render = True
-        cv2.imshow('updateLayoutMesh::explore map', self.explore_map.map)
         self.layout_mesh = self.layout_map.generateLayoutMesh(
             self.explore_map, self.unit_size, self.free_width, wall_height,
             dist_max, render)
