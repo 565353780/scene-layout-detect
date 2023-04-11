@@ -21,7 +21,14 @@ def getPolylines(explore_map, dist_max=4):
     thresh[np.where(unknown_mask)] = 0
 
     contours, _ = cv2.findContours(thresh, 3, 2)
-    cnt = contours[0]
+
+    max_point_num = 0
+    max_point_idx = -1
+    for i, contour in enumerate(contours):
+        if contour.shape[0] > max_point_num:
+            max_point_num = contour.shape[0]
+            max_point_idx = i
+    cnt = contours[max_point_idx]
 
     polylines = cv2.approxPolyDP(cnt, dist_max, True)
 
