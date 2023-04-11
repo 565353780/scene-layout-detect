@@ -70,26 +70,28 @@ def getMinDist2(point, point_list):
     return min_dist
 
 
-def generateRectangleMesh(floor_array):
-    assert floor_array.shape[0] == 4
+def generateRegularMesh(floor_array):
+    assert floor_array.shape[0] < 5
 
-    triangles = np.array([
-        [0, 1, 2],
-        [2, 3, 0],
-    ], dtype=int)
+    if floor_array.shape[0] == 3:
+        triangles = np.array([[0, 1, 2]], dtype=int)
+    else:
+        triangles = np.array([[0, 1, 2], [2, 3, 0]], dtype=int)
 
-    rectangle_mesh = o3d.geometry.TriangleMesh()
-    rectangle_mesh.vertices = o3d.utility.Vector3dVector(floor_array)
-    rectangle_mesh.triangles = o3d.utility.Vector3iVector(triangles)
-    rectangle_mesh.compute_vertex_normals()
-    return rectangle_mesh
+    regular_mesh = o3d.geometry.TriangleMesh()
+    regular_mesh.vertices = o3d.utility.Vector3dVector(floor_array)
+    regular_mesh.triangles = o3d.utility.Vector3iVector(triangles)
+    regular_mesh.compute_vertex_normals()
+    return regular_mesh
 
 
 def generateFloorMesh(floor_array, delta_dist=0.05):
     point_num = len(floor_array)
 
-    if point_num == 4:
-        return generateRectangleMesh(floor_array)
+    assert point_num > 2
+
+    if point_num < 5:
+        return generateRegularMesh(floor_array)
 
     min_point_dist = delta_dist / 4
 
