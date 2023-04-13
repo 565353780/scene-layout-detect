@@ -39,6 +39,8 @@ class ExploreMap(object):
 
     def updateMap(self, polygon):
         if polygon.shape[0] == 0:
+            print('[WARN][ExploreMap::updateMap]')
+            print('\t polygon is empty!')
             return True
 
         scale = 1.0 / self.unit_size
