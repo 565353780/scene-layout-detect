@@ -73,6 +73,9 @@ def getMinDist2(point, point_list):
 def generateRegularMesh(floor_array):
     assert floor_array.shape[0] < 5
 
+    if floor_array.shape[0] < 3:
+        triangles = np.array([], dtype=int)
+
     if floor_array.shape[0] == 3:
         triangles = np.array([[0, 1, 2]], dtype=int)
     else:
@@ -87,8 +90,6 @@ def generateRegularMesh(floor_array):
 
 def generateFloorMesh(floor_array, delta_dist=0.05):
     point_num = len(floor_array)
-
-    assert point_num > 2
 
     if point_num < 5:
         return generateRegularMesh(floor_array)
