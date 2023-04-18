@@ -16,7 +16,6 @@ from scene_layout_detect.Module.explore_point_extractor import ExplorePointExtra
 
 
 class LayoutMapBuilder(object):
-
     def __init__(self, delta_angle=2, unit_size=0.01, free_width=50):
         self.delta_angle = delta_angle
         self.unit_size = unit_size
@@ -61,10 +60,14 @@ class LayoutMapBuilder(object):
         self.layout_map.addPolygon(polygon)
         return True
 
-    def updateLayoutMesh(self, wall_height=3, dist_max=4, render=False):
+    def updateLayoutMesh(self,
+                         wall_height=3,
+                         dist_max=4,
+                         skip_floor=False,
+                         render=False):
         self.layout_mesh = self.layout_map.generateLayoutMesh(
             self.explore_map, self.unit_size, self.free_width, wall_height,
-            dist_max, render)
+            dist_max, skip_floor, render)
         return True
 
     def updateExplorePointIdx(self, min_explore_point_dist=5, render=False):

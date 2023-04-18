@@ -15,7 +15,6 @@ from scene_layout_detect.Method.render import renderPolygonAndFloor
 
 
 class LayoutMap(object):
-
     def __init__(self, unit_size=0.01, free_width=50):
         self.unit_size = unit_size
         self.free_width = free_width
@@ -144,12 +143,18 @@ class LayoutMap(object):
                            free_width=50,
                            wall_height=3,
                            dist_max=4,
+                           skip_floor=False,
                            render=False):
         self.generateLayoutFloor(explore_map, unit_size, free_width, dist_max,
                                  render)
 
-        layout_mesh = generateLayoutMesh(self.floor_array, wall_height)
+        layout_mesh = generateLayoutMesh(self.floor_array,
+                                         wall_height,
+                                         skip_floor=skip_floor)
 
         if render:
-            drawGeometries([layout_mesh], 'generateLayoutMesh::layout_mesh')
+            window_name = '[LayoutMap::generateLayoutMesh]layout_mesh'
+            if skip_floor:
+                window_name += '_w/o_floor'
+            drawGeometries([layout_mesh], window_name)
         return layout_mesh

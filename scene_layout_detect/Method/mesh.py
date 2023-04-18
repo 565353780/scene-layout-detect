@@ -162,7 +162,8 @@ def generateFloorMesh(floor_array, delta_dist=0.05):
 def generateLayoutMesh(floor_array,
                        wall_height=3,
                        top_floor_array=None,
-                       expand_scale=1.0):
+                       expand_scale=1.0,
+                       skip_floor=False):
     point_num = len(floor_array)
 
     if top_floor_array is None:
@@ -176,6 +177,13 @@ def generateLayoutMesh(floor_array,
         next_idx = (i + 1) % point_num
         triangles.append([next_idx, i, next_idx + point_num])
         triangles.append([i + point_num, next_idx + point_num, i])
+
+    if skip_floor:
+        mesh = o3d.geometry.TriangleMesh()
+        mesh.vertices = o3d.utility.Vector3dVector(verts)
+        mesh.triangles = o3d.utility.Vector3iVector(triangles)
+        mesh.compute_vertex_normals()
+        return mesh
 
     if expand_scale != 1.0:
         center = np.mean(floor_array, axis=0)

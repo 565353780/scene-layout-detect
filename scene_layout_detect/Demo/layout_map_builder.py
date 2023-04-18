@@ -18,6 +18,7 @@ def demo():
     explore_paint_radius = 0.1
     min_explore_point_dist = 5
     dist_max = 4
+    skip_floor = False
     render = False
 
     layout_map_builder = LayoutMapBuilder(delta_angle, unit_size, free_width)
@@ -32,7 +33,8 @@ def demo():
         [0, 1, 0],
         [0, 0.5, 0],
     ], explore_paint_radius, render)
-    layout_map_builder.updateLayoutMesh(wall_height, dist_max, render)
+    layout_map_builder.updateLayoutMesh(wall_height, dist_max, skip_floor,
+                                        render)
     layout_map_builder.updateExplorePointIdx(min_explore_point_dist, render)
 
     if render:
