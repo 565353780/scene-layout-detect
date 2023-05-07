@@ -74,3 +74,17 @@ class LayoutMapBuilder(object):
         self.explore_point_idx_array = self.explore_point_extractor.extractExplorePoints(
             self.explore_map.map, min_explore_point_dist, render)
         return True
+
+    def getExplorePointList(self, min_explore_point_dist=5, render=False):
+        self.updateExplorePointIdx(min_explore_point_dist, render)
+
+        explore_point_list = []
+
+        if self.explore_point_idx_array is None:
+            return explore_point_list
+
+        for explore_point_idx in self.explore_point_idx_array:
+            explore_point = self.explore_map.getPointFromPixel(
+                explore_point_idx[0], explore_point_idx[1])
+            explore_point_list.append(explore_point)
+        return explore_point_list
