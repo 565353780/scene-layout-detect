@@ -18,7 +18,7 @@ class ExploreMap(object):
     def __init__(self,
                  unit_size=0.1,
                  free_width=5,
-                 floor_height_max=0.1,
+                 floor_height_max=0.4,
                  agent_height_max=2):
         self.unit_size = unit_size
         self.free_width = free_width
@@ -132,7 +132,7 @@ class ExploreMap(object):
         self.map[update_free_idx] = FREE_COLOR
         return True
 
-    def updateObstacle(self, point_array, paint_radius=0.1):
+    def updateObstacle(self, point_array, paint_radius=0.01):
         paint_pixel_length = ceil(paint_radius / self.unit_size)
 
         for point in point_array:
